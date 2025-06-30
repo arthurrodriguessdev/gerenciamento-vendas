@@ -23,18 +23,22 @@ def registrar_compra():
     if len(clientes) > 0:
         i = 1
         for email in clientes:
-            print("\n", i, "-", email, "\n")
+            print("\n", i, "-", email)
             i += 1
 
         cliente_selecionar = input("Informe o e-mail do cliente que deseja realizar a compra: ").strip().lower()
 
         if cliente_selecionar in clientes:
-            nome_produto = input("Digite o nome do produto: ")
+            nome_produto = input("\nDigite o nome do produto: ")
             valor_produto = input("Digite o valor do produto: ")
 
             try:
                 valor_produto = float(valor_produto)
-                vendas[cliente_selecionar] = {'Produto': nome_produto, 'Valor': valor_produto}
+
+                if cliente_selecionar not in vendas:
+                    vendas[cliente_selecionar] = []
+
+                vendas[cliente_selecionar].append({'Produto': nome_produto, 'Valor': valor_produto})
                 print("\nCompra registrada com sucesso!\n")
 
             except ValueError:
@@ -53,6 +57,7 @@ def listar_clientes():
         for nome, valor in clientes.items():
             print()
             print(f"{i} - {valor['Nome']}\n")
+            i += 1
     else:
         print("\nLista de clientes vazia!\n")
         
@@ -68,8 +73,8 @@ def listar_compras():
         print()
 
         if email_selecionado in vendas:
-            for email, dados in vendas.items():
-                print(f"Produto: {dados['Produto']} | Preço: R$ {dados['Valor']}")
+            for compra in vendas[email_selecionado]:
+                print(f"Produto: {compra['Produto']} | Preço: R$ {compra['Valor']:.2f}")
 
         else:
             print("\nE-mail inválido!\n")        
@@ -78,25 +83,34 @@ def listar_compras():
         print("\nLista de compras vazia!\n")
 
 def relatorio_vendas():
-    media = 0
-    for email, dados in vendas.items():
-        print(dados['Valor'])
+    if vendas:
+        valor_total_vendas = 0
+        
+        print("\n=== RELATÓRIO DE VENDAS ===\n")
+        for email, dados in vendas.items():
+            print(f"Cliente: {clientes[email]['Nome']} | E-mail: {email}")
 
-        media += sum(dados['Valor']) / len('Valor')
+            total_cliente = 0
+            for compra in dados:
+                print(f"Produto: {compra['Produto']} | Valor: R${compra['Valor']:.2f}")
+                
+                total_cliente += compra['Valor']
+                valor_total_vendas += compra['Valor']
 
+            print(f"\nValor total gasto por este cliente: R${total_cliente:.2f}\n")
+        print(f"\nValor total arrecadado de vendas: R${valor_total_vendas:.2f}\n")
 
-
-
+    else:
+        print("\nNenhuma venda foi registrada!\n")
+        
 menu_principal = True
 while menu_principal:
     print("1 - Cadastrar novo cliente")
     print("2 - Registrar nova compra")
     print("3 - Listar todos os clientes")
     print("4 - Listar compras de um cliente")
-    print("5 - Buscar cliente por nome")
-    print("6 - Relatório geral de vendas")
-    print("7 - Gerar relatório personalizado")
-    print("8 - Sair\n")
+    print("5 - Relatório geral de vendas")
+    print("6 - Sair\n")
 
     selecionar_opcao = input("Digite o número referente a opção desejada: ")
 
@@ -117,9 +131,9 @@ while menu_principal:
     elif selecionar_opcao == 4:
         listar_compras()
     
-    elif selecionar_opcao == 6:
+    elif selecionar_opcao == 5:
         relatorio_vendas()
 
-    elif selecionar_opcao == 8:
+    elif selecionar_opcao == 6:
         menu_principal= False
         print("\nSaída realizada com sucesso!")
