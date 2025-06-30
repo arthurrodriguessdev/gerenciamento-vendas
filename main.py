@@ -56,6 +56,25 @@ def listar_clientes():
     else:
         print("\nLista de clientes vazia!\n")
         
+def listar_compras():
+    if vendas:
+        i = 1
+
+        for email in clientes:
+            print(i, "-", email)
+            i += 1
+
+        email_selecionado = input("\nInforme o e-mail do cliente que deseja consultar compras: ").lower().strip()
+
+        if email_selecionado in vendas:
+            for email, dados in vendas.items():
+                print(f"Produto: {dados['Produto']} | Preço: R$ {dados['Valor']}")
+
+        else:
+            print("\nE-mail inválido!\n")        
+
+    else:
+        print("\nLista de compras vazia!\n")
 menu_principal = True
 while menu_principal:
     print("1 - Cadastrar novo cliente")
@@ -82,6 +101,9 @@ while menu_principal:
 
     elif selecionar_opcao == 3:
         listar_clientes()
+
+    elif selecionar_opcao == 4:
+        listar_compras()
 
     elif selecionar_opcao == 8:
         menu_principal= False
