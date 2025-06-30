@@ -50,9 +50,9 @@ def listar_clientes():
         print("\n=== LISTA DE CLIENTES ===\n")
 
         i = 1
-        for nome, dd in clientes.items():
-            print(f"{i} - {clientes['Nome']}")
-            i += 1
+        for nome, valor in clientes.items():
+            print()
+            print(f"{i} - {valor['Nome']}\n")
     else:
         print("\nLista de clientes vazia!\n")
         
